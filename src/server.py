@@ -1,7 +1,7 @@
 import eventlet.wsgi
 import socketio
 from flask import Flask, render_template
-from src.minesweeper import *
+from minesweeper import *
 
 sio = socketio.Server()
 app = Flask(__name__)
@@ -44,6 +44,7 @@ class PlayerNamespace(socketio.Namespace):
 
     def on_play(self, sid, data):
         print("player %s started %s game" % (sid, data["difficulty"]))
+        names[sid] = data["name"]
         if data["difficulty"] == "beginner":
             games[sid] = Minesweeper(FIELD_SIZE_BEGINNER, MINES_COUNT_BEGINNER,
                                      lambda field: self.field_update_callback(sid, field),
@@ -96,6 +97,14 @@ class PlayerNamespace(socketio.Namespace):
             print("player %s lose the game" % sid)
 
         self.emit("end_game", {"win": win}, room=sid)
+
+    @staticmethod
+    def on_disconnect(sid):
+        if sid in names:
+            del names[sid]
+
+        if sid in games:
+            del games[sid]
 
 
 if __name__ == '__main__':
