@@ -59,7 +59,7 @@ class PlayerNamespace(socketio.Namespace):
                                      lambda win: self.end_game_callback(sid, win))
 
     @staticmethod
-    def on_mark_cell(sid, data):
+    def on_mark(sid, data):
         if sid not in games:
             return
         coordinates = data["coordinates"]
@@ -67,7 +67,7 @@ class PlayerNamespace(socketio.Namespace):
         games[sid].mark_cell(coordinates)
 
     @staticmethod
-    def on_unmark_cell(sid, data):
+    def on_unmark(sid, data):
         if sid not in games:
             return
         coordinates = data["coordinates"]
@@ -75,7 +75,7 @@ class PlayerNamespace(socketio.Namespace):
         games[sid].unmark_cell(coordinates)
 
     @staticmethod
-    def on_open_cell(sid, data):
+    def on_open(sid, data):
         if sid not in games:
             return
         coordinates = data["coordinates"]
