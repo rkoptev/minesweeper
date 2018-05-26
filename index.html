@@ -1,0 +1,38 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+	<meta charset="UTF-8">
+	<title>Minesweeper</title>
+	<link rel="stylesheet" href="src/static/style.css">
+	<link rel="icon" href="src/static/favicon.png">
+</head>
+<body>
+<div id="minesweeper-game">
+	<div class="titlebar">
+		Minesweeper
+		<div class="titlebar-buttons closeme">&times;</div>
+	</div>
+	<div id="window">
+		<div id="scoreboard">
+			<div id="score-bomb-count" class="panel">010</div>
+			<button class="" id="score-restart-button"></button>
+			<div id="score-time-count" class="panel">000</div>
+		</div>
+		<div id="map"></div>
+	</div>
+</div>
+
+<div class="taskbar">
+	<div class="time"></div>
+	<div class="task active">Minesweeper</div>
+</div>
+
+
+<script src="src/static/socket.io.dev.js"></script>
+<script src="src/static/sdk.js"></script>
+<script src="your-code-here.js"></script>
+<script>
+	var game = Minesweeper(level, username, onUpdate);
+</script>
+</body>
+</html>
