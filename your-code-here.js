@@ -30,5 +30,6 @@ function onUpdate(newField) {
 	var coordinates = generateRandomCoordinatesAtField(newField);
 
 	// At the end you must to do a move
+    // Possible moves: open, mark (place flag), unmark
 	return {action: "open", coordinates};
 }
