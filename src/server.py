@@ -1,7 +1,7 @@
 import eventlet.wsgi
 import socketio
 from flask import Flask, render_template
-from minesweeper import *
+from src.minesweeper import *
 
 sio = socketio.Server()
 app = Flask(__name__)
@@ -53,7 +53,7 @@ class PlayerNamespace(socketio.Namespace):
             games[sid] = Minesweeper(FIELD_SIZE_INTERMEDIATE, MINES_COUNT_INTERMEDIATE,
                                      lambda field: self.field_update_callback(sid, field),
                                      lambda win: self.end_game_callback(sid, win))
-        elif data["difficulty"] == "intermediate":
+        elif data["difficulty"] == "expert":
             games[sid] = Minesweeper(FIELD_SIZE_EXPERT, MINES_COUNT_EXPERT,
                                      lambda field: self.field_update_callback(sid, field),
                                      lambda win: self.end_game_callback(sid, win))
@@ -82,11 +82,9 @@ class PlayerNamespace(socketio.Namespace):
         print("player %s open cell with coordinates (%d,%d)" % (sid, coordinates[0], coordinates[1]))
         games[sid].open_cell(coordinates)
 
-    def field_update_callback(self, sid, field):
+    def field_update_callback(self, sid, data):
         # Update user field
-        self.emit("update", room=sid, data={
-            "field": field
-        })
+        self.emit("update", room=sid, data=data)
         # Update watchers UI
         WatcherNamespace.update()
 
