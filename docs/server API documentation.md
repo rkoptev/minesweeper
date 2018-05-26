@@ -9,16 +9,16 @@ var socket = io('http://77.73.67.16:8154/play');
 #### socket.emit("play", { "difficulty": "beginner", "name": "Cool Hacker"})
 Call this method to start new game. You can select different difficulty among beginner (9x9 & 10 mines), intermediate (16x16 & 40 mines) and expert (30x16 & 99 mines). There is also field for your name to easily find your game in dashboard
 
-#### socket.emit("mark_cell", { "coordinates": [x,y] })
+#### socket.emit("mark", { "coordinates": [x,y] })
 Call this method to place flag in cell. The flag marks a bomb. It's actually not necessary to win the game, but placing flags may make debug for you easier.
 
-#### socket.emit("unmark_cell", { "coordinates": [x,y] })
+#### socket.emit("unmark", { "coordinates": [x,y] })
 Call this method to remove flag from cell. 
 
-#### socket.emit("open_cell", { "coordinates": [x,y] })
+#### socket.emit("open", { "coordinates": [x,y] })
 Call this method to open cell.
 
-#### socket.on("update", { "field": [...] })
+#### socket.on("update", { "field": [...], "flags_left": 9 })
 This event fires every time when field update. It's needed for UI update and for updating game bot. Here is the example of field for beginner game:
 ```
 [[" ", " ", " ", " ", " ", " ", " ", " ", " "]
