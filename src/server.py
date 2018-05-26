@@ -1,7 +1,7 @@
 import eventlet.wsgi
 import socketio
 from flask import Flask, render_template
-from src.minesweeper import *
+from minesweeper import *
 
 sio = socketio.Server()
 app = Flask(__name__)
