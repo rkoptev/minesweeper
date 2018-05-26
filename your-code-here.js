@@ -1,7 +1,18 @@
-// Setup
-const level = "expert"; // beginner / intermediate / expert
-const username = "vasiliy pupkin";
-const TPS = 10; // ticks per second
+/*
+
+Welcome to the Minesweeper challenge!
+TODO: Add description
+
+ */
+
+// Name to be displayed on dashboard
+const username = "Anonymous";
+// Choose game difficulty: beginner, intermediate, expert
+const level = "beginner";
+// How many moves per second you want to perform?
+// (Hint: less values are good for step-to-step debugging, bigger values - for final testing)
+// We recommend to start with 1 step per second
+const TPS = 1;
 
 
 function generateRandomCoordinatesAtField(field) {
@@ -14,9 +25,10 @@ function generateRandomCoordinatesAtField(field) {
 	]
 }
 
+// This is where your magic happens
 function onUpdate(newField) {
 	var coordinates = generateRandomCoordinatesAtField(newField);
 
-	// Think hard
+	// At the end you must to do a move
 	return {action: "open", coordinates};
 }

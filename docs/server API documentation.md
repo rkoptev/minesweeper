@@ -40,6 +40,9 @@ The field itself is a 2D nested array with symbol representation of cells. Here 
 - __"X"__ - false flagged mine
 - __"*"__ - exploded mine
 
+#### socket.on("message", "You are doing ditch. Fix your code.")
+Called when server wants to report user about wrong actions.
+
 #### socket.on("end_game", { "win": true })
 Called when game ends. If you want to start new game, call "play" again.
 

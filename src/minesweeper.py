@@ -47,9 +47,9 @@ class Minesweeper:
             self.__player_view[y][x] = "F"
             self.__on_field_update()
             return True
-        # Return True if cell is already marked
+        # Return False if cell is already marked
         elif self.__player_view[y][x] == "F":
-            return True
+            return False
 
         return False
 
@@ -86,6 +86,10 @@ class Minesweeper:
     def get_field(self):
         """ Return player field view """
         return list(self.__player_view)
+
+    def get_shape(self) -> (int, int):
+        """ Return shape of field in (x, y) format """
+        return self.__shape
 
     def __show_cell(self, coordinates, propagation_call=False) -> bool:
         """ Open cell on field (internal method)"""
