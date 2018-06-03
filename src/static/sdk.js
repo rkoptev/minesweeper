@@ -1,4 +1,4 @@
-var socket = io('http://77.73.67.16:8154/play');
+var serverUrl = 'http://77.73.67.16:8154';
 
 var mapElement = document.querySelector("#map");
 var windowElement = document.querySelector("#minesweeper-game");
@@ -101,11 +101,13 @@ function currentDate() {
 }
 
 function Minesweeper(difficulty, name, callback) {
-	socket.emit("play", {difficulty, name});
+    var socket = io(serverUrl + '/play');
+
+    socket.emit("play", {difficulty, name});
 
 	socket.on("update", function ({field, flags_left}) {
 		score.innerHTML = addLeadingZeros(ticks++);
-		time.innerHTML = currentDate()
+		time.innerHTML = currentDate();
 		flagsLeft.innerHTML = addLeadingZeros(flags_left);
 
 		repaintMap(field);
