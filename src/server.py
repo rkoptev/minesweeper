@@ -72,7 +72,8 @@ class PlayerNamespace(socketio.Namespace):
             self.emit("message", room=sid, data="You submitted wrong turn")
             return
 
-            coordinates = data["coordinates"]
+        coordinates = data["coordinates"]
+        
         if not self.__check_coordinates(sid, coordinates):
             return
 
