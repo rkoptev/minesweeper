@@ -114,6 +114,9 @@ function Minesweeper(difficulty, name, callback) {
 		setTimeout(() => {
 			socket.emit(action, {coordinates})
 		}, 1000 / TPS)
+	});
 
-	})
+    socket.on("message", function (msg) {
+        console.log('hey! new message from server: ' + msg);
+    })
 }

@@ -14,6 +14,8 @@ const level = "beginner";
 // We recommend to start with 1 step per second
 const TPS = 1;
 
+// serverUrl = 'http://77.73.67.16:8154';
+
 
 function generateRandomCoordinatesAtField(field) {
 	var maxY = field.length;
