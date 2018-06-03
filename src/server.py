@@ -32,7 +32,8 @@ class WatcherNamespace(socketio.Namespace):
         for sid in games:
             fields.append({
                 "name": names[sid] or "Anonymous",
-                "field": games[sid].get_field()
+                "field": games[sid].get_field(),
+                "flags_left": games[sid].calculate_flags_left()
             })
 
         sio.emit("state", namespace="/watch", sid=sid, data={
@@ -74,7 +75,7 @@ class PlayerNamespace(socketio.Namespace):
         if games[sid].mark_cell(coordinates):
             log.info("Player %s marking cell with coordinates [%d,%d], sid=%s" % (names[sid], coordinates[0], coordinates[1], sid))
         else:
-            self.emit("message", room=sid, data="Cell with coordinates [%d, %d] is already marked or opened")
+            self.emit("message", room=sid, data="Cell with coordinates [%d, %d] is already marked or opened" % (coordinates[0], coordinates[1]))
 
     def on_unmark(self, sid, data):
         # Check if game started
@@ -88,7 +89,7 @@ class PlayerNamespace(socketio.Namespace):
         if games[sid].unmark_cell(coordinates):
             log.info("Player %s unmarking cell with coordinates [%d,%d], sid=%s" % (names[sid], coordinates[0], coordinates[1], sid))
         else:
-            self.emit("message", room=sid, data="Cell with coordinates [%d, %d] is not marked or already opened")
+            self.emit("message", room=sid, data="Cell with coordinates [%d, %d] is not marked or already opened" % (coordinates[0], coordinates[1]))
 
     def on_open(self, sid, data):
         # Check if game started
@@ -102,7 +103,7 @@ class PlayerNamespace(socketio.Namespace):
         if games[sid].open_cell(coordinates):
             log.info("Player %s open cell with coordinates [%d,%d], sid=%s" % (names[sid], coordinates[0], coordinates[1], sid))
         else:
-            self.emit("message", room=sid, data="Cell with coordinates [%d, %d] is already opened")
+            self.emit("message", room=sid, data="Cell with coordinates [%d, %d] is already opened" % (coordinates[0], coordinates[1]))
 
     def __check_coordinates(self, sid, coordinates):
         # Get coordinates of cell
@@ -115,7 +116,7 @@ class PlayerNamespace(socketio.Namespace):
 
         # Check if coordinates are in range of field
         if not 0 <= x < games[sid].get_shape()[0] or not 0 <= y < games[sid].get_shape()[1]:
-            self.emit("message", room=sid, data="Coordinates [%d, %d] are out of field boundaries")
+            self.emit("message", room=sid, data="Coordinates [%d, %d] are out of field boundaries" % (coordinates[0], coordinates[1]))
             return False
 
         return True

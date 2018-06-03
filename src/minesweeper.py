@@ -185,7 +185,7 @@ class Minesweeper:
 
         return mines_count
 
-    def __calculate_flags_left(self) -> int:
+    def calculate_flags_left(self) -> int:
         """ Return count of mines that supposed to be unflagged """
         flags_left = self.__mines_count
 
@@ -204,5 +204,5 @@ class Minesweeper:
         """ Call player field view update callback to update players view """
         self.__field_update_callback({
             "field": list(self.__player_view),
-            "flags_left": self.__calculate_flags_left()
+            "flags_left": self.calculate_flags_left()
         })
