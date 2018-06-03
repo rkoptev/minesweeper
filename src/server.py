@@ -68,7 +68,11 @@ class PlayerNamespace(socketio.Namespace):
         if sid not in games:
             return
 
-        coordinates = data["coordinates"]
+        if "coordinates" not in data:
+            self.emit("message", room=sid, data="You submitted wrong turn")
+            return
+
+            coordinates = data["coordinates"]
         if not self.__check_coordinates(sid, coordinates):
             return
 
@@ -80,6 +84,10 @@ class PlayerNamespace(socketio.Namespace):
     def on_unmark(self, sid, data):
         # Check if game started
         if sid not in games:
+            return
+
+        if "coordinates" not in data:
+            self.emit("message", room=sid, data="You submitted wrong turn")
             return
 
         coordinates = data["coordinates"]
@@ -94,6 +102,10 @@ class PlayerNamespace(socketio.Namespace):
     def on_open(self, sid, data):
         # Check if game started
         if sid not in games:
+            return
+
+        if "coordinates" not in data:
+            self.emit("message", room=sid, data="You submitted wrong turn")
             return
 
         coordinates = data["coordinates"]

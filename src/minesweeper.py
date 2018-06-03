@@ -30,7 +30,7 @@ class Minesweeper:
         cells_count = shape[0] * shape[1]
         mines = random.sample(range(0, cells_count), mines_count)
         for mine in mines:
-            mine_x = mine % shape[1]
+            mine_x = mine % shape[0]
             mine_y = mine // shape[0]
             self.__field[mine_y][mine_x] = 1
 
