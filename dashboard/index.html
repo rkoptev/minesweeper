@@ -2,9 +2,9 @@
 <html lang="en">
 <head>
 	<meta charset="UTF-8">
-	<title>Minesweeper</title>
-	<link rel="stylesheet" href="src/static/style.css">
-	<link rel="icon" href="src/static/favicon.png">
+	<title>Minesweeper | Dashboard</title>
+	<link rel="stylesheet" href="../src/static/style.css">
+	<link rel="icon" href="../src/static/favicon.png">
 </head>
 <body>
 <div id="playground">
@@ -31,11 +31,10 @@
 </div>
 
 
-<script src="src/static/socket.io.dev.js"></script>
-<script src="src/static/sdk.js"></script>
-<script src="your-code-here.js"></script>
+<script src="../src/static/socket.io.dev.js"></script>
+<script src="../src/static/sdk.js"></script>
 <script>
-	var game = Minesweeper(level, username, onUpdate);
+	var game = new Dashboard();
 </script>
 </body>
 </html>

@@ -1,9 +1,10 @@
 var serverUrl = 'http://77.73.67.16:8154';
-
-var mapElement = document.querySelector("#map");
-var windowElement = document.querySelector("#minesweeper-game");
-var score = document.querySelector('#score-time-count');
-var flagsLeft = document.querySelector('#score-bomb-count');
+// var mapElement = document.querySelectorAll(".map");
+// var windowElement = document.querySelectorAll(".minesweeper-game");
+// var score = document.querySelectorAll('.score-time-count');
+// var flagsLeft = document.querySelectorAll('.score-bomb-count');
+var mapSample = document.querySelector('#sample');
+var body = document.querySelector('#playground');
 var time = document.querySelector('.time');
 
 var ticks = 0;
@@ -61,24 +62,26 @@ function addCellToRow (cellElem, rowElem) {
 	rowElem.appendChild(cellElem);
 }
 
-function addRowToField (rowElem) {
+function addRowToField (rowElem, mapElement) {
 	mapElement.appendChild(rowElem);
 }
 
-function clearMap () {
+function clearMap (windowElement) {
+    var mapElement = windowElement.querySelector('.map');
 	mapElement.innerHTML = "";
 }
 
-function repaintMap (map) {
+function repaintMap (map, windowElement) {
 	if (!map)
 		return;
 
-	clearMap();
+	clearMap(windowElement);
 
 	var mapSizes = {
-		width: Math.min(map[0].length * cellSize, window.innerWidth),
-		height: Math.min(map.length * cellSize, window.innerHeight)
+		width: Math.min(map[0].length * cellSize),
+		height: Math.min(map.length * cellSize)
 	};
+    var mapElement = windowElement.querySelector('.map');
 
 	mapElement.style = `width: ${mapSizes.width}px; height: ${mapSizes.height}px;`;
 	windowElement.style = `width: ${mapSizes.width + 26}px;`;
@@ -86,7 +89,7 @@ function repaintMap (map) {
 	map.forEach(row => {
 		var newRow = new Row();
 		row.forEach(cell => addCellToRow(new Cell(cell), newRow));
-		addRowToField(newRow);
+		addRowToField(newRow, mapElement);
 	})
 }
 
@@ -100,11 +103,27 @@ function currentDate () {
 	return `${date.getHours()}:${date.getMinutes()}`
 }
 
-function renderWindow (field, flags_left, ticks) {
+function renderWindow (field, flags_left, ticks, mapElement) {
+    var score = mapElement.querySelector('.score-time-count');
+    var flagsLeft = mapElement.querySelector('.score-bomb-count');
+
     score.innerHTML = addLeadingZeros(ticks);
     flagsLeft.innerHTML = addLeadingZeros(flags_left);
 
-    repaintMap(field);
+    repaintMap(field, mapElement);
+}
+
+function Map (name) {
+    var newMap = mapSample.cloneNode(true);
+
+    newMap.style = 'display: block';
+    newMap.id = name;
+
+    var titlebar = newMap.querySelector('.titlebar')
+    titlebar.innerHTML = `Minesweeper (${name})`
+
+    body.appendChild(newMap);
+    return newMap;
 }
 
 function Minesweeper (difficulty, name, callback) {
@@ -112,16 +131,21 @@ function Minesweeper (difficulty, name, callback) {
 
     socket.emit("play", {difficulty, name});
 
+    var map = new Map('name');
+
 	socket.on("update", function ({field, flags_left}) {
         time.innerHTML = currentDate();
 
-		renderWindow(field, flags_left, ticks++);
+		renderWindow(field, flags_left, ticks++, map);
 
         try {
             var {action, coordinates} = callback(field);
-            setTimeout(() => {
-    			socket.emit(action, {coordinates});
-    		}, 1000 / TPS);
+            if(action && coordinates)
+                setTimeout(() => {
+        			socket.emit(action, {coordinates});
+        		}, 1000 / TPS);
+            else
+                console.log('please provide correct action and coordinates');
         } catch (e) {
             console.log('You submitted wrong turn.');
             console.log(e);
@@ -133,14 +157,26 @@ function Minesweeper (difficulty, name, callback) {
     });
 }
 
+function clearPlayground () {
+    body.innerHTML = ''
+}
+
 function Dashboard () {
     var socket = io(serverUrl + '/watch');
 
-    socket.on("update", function ({fields}) {
-        time.innerHTML = currentDate();
-        ticks++;
-        fields.forEach(({field, flags_left}) => {
-            renderWindow(field, flags_left, ticks);
-        });
+    socket.on("state", function ({fields}) {
+
+
+        if(!ticks){
+            clearPlayground();
+
+            time.innerHTML = currentDate();
+
+            ticks++;
+            fields.forEach(({field, flags_left, name}, i) => {
+                var map = new Map(name + i);
+                renderWindow(field, flags_left, ticks, map);
+            });
+        }
     });
 }
