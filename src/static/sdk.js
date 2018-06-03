@@ -165,18 +165,14 @@ function Dashboard () {
     var socket = io(serverUrl + '/watch');
 
     socket.on("state", function ({fields}) {
+        clearPlayground();
 
+        time.innerHTML = currentDate();
 
-        if(!ticks){
-            clearPlayground();
-
-            time.innerHTML = currentDate();
-
-            ticks++;
-            fields.forEach(({field, flags_left, name}, i) => {
-                var map = new Map(name + i);
-                renderWindow(field, flags_left, ticks, map);
-            });
-        }
+        ticks++;
+        fields.forEach(({field, flags_left, name}, i) => {
+            var map = new Map(name + i);
+            renderWindow(field, flags_left, ticks, map);
+        });
     });
 }
