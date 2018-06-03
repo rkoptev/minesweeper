@@ -4,6 +4,7 @@ var mapSample = document.querySelector('#sample');
 var body = document.querySelector('#playground');
 var time = document.querySelector('.time');
 var loadPrevBtn = document.querySelector('[name=load-prev]');
+var loadFinalBtn = document.querySelector('[name=load-final]');
 
 
 var ticks = 0;
@@ -132,11 +133,17 @@ function Minesweeper (difficulty, name, callback) {
 
     var map = new Map('name');
     var prevField = [];
+    var finalField = [];
     var tmp = [];
 
     loadPrevBtn.addEventListener('click', function() {
-        renderWindow(prevField, 0, --ticks, map);
-    })
+        renderWindow(prevField, 0, ticks, map);
+    });
+    loadFinalBtn.addEventListener('click', function() {
+        finalField = tmp;
+        renderWindow(finalField, 0, ticks, map);
+    });
+
 
 	socket.on("update", function ({field, flags_left}) {
         time.innerHTML = currentDate();
@@ -161,9 +168,8 @@ function Minesweeper (difficulty, name, callback) {
     socket.on("end_game", function ({win}) {
         if(win)
             alert('you win! :)');
+    });
 
-        var prevField = tmp;
-    } )
     socket.on("message", function (msg) {
         console.error(msg);
     });
