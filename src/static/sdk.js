@@ -133,4 +133,14 @@ function Minesweeper (difficulty, name, callback) {
     });
 }
 
+function Dashboard () {
+    var socket = io(serverUrl + '/watch');
+
+    socket.on("update", function ({fields}) {
+        time.innerHTML = currentDate();
+        ticks++;
+        fields.forEach(({field, flags_left}) => {
+            renderWindow(field, flags_left, ticks);
+        });
+    });
 }
