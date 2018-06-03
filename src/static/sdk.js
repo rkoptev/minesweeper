@@ -9,14 +9,14 @@ var time = document.querySelector('.time');
 var ticks = 0;
 var cellSize = 30; // px
 
-function Row() {
+function Row () {
 	var newRow = document.createElement('div');
 	newRow.classList.add('row');
 	newRow.style = `height: ${cellSize}px;`;
 	return newRow;
 }
 
-function Cell(type) {
+function Cell (type) {
 	var newCell = document.createElement('button');
 	newCell.classList.add('cell');
 	newCell.style = `height: ${cellSize}px; width: ${cellSize}px`;
@@ -57,19 +57,19 @@ function Cell(type) {
 	return newCell;
 }
 
-function addCellToRow(cellElem, rowElem) {
+function addCellToRow (cellElem, rowElem) {
 	rowElem.appendChild(cellElem);
 }
 
-function addRowToField(rowElem) {
+function addRowToField (rowElem) {
 	mapElement.appendChild(rowElem);
 }
 
-function clearMap() {
+function clearMap () {
 	mapElement.innerHTML = "";
 }
 
-function repaintMap(map) {
+function repaintMap (map) {
 	if (!map)
 		return;
 
@@ -90,35 +90,47 @@ function repaintMap(map) {
 	})
 }
 
-function addLeadingZeros(number) {
+function addLeadingZeros (number) {
 	return number < 10 ? `00${number}` :
 		number < 100 ? `0${number}` : number
 }
 
-function currentDate() {
+function currentDate () {
 	var date = new Date();
 	return `${date.getHours()}:${date.getMinutes()}`
 }
 
-function Minesweeper(difficulty, name, callback) {
+function renderWindow (field, flags_left, ticks) {
+    score.innerHTML = addLeadingZeros(ticks);
+    flagsLeft.innerHTML = addLeadingZeros(flags_left);
+
+    repaintMap(field);
+}
+
+function Minesweeper (difficulty, name, callback) {
     var socket = io(serverUrl + '/play');
 
     socket.emit("play", {difficulty, name});
 
 	socket.on("update", function ({field, flags_left}) {
-		score.innerHTML = addLeadingZeros(ticks++);
-		time.innerHTML = currentDate();
-		flagsLeft.innerHTML = addLeadingZeros(flags_left);
+        time.innerHTML = currentDate();
 
-		repaintMap(field);
+		renderWindow(field, flags_left, ticks++);
 
-		var {action, coordinates} = callback(field);
-		setTimeout(() => {
-			socket.emit(action, {coordinates})
-		}, 1000 / TPS)
+        try {
+            var {action, coordinates} = callback(field);
+            setTimeout(() => {
+    			socket.emit(action, {coordinates});
+    		}, 1000 / TPS);
+        } catch (e) {
+            console.log('You submitted wrong turn.');
+            console.log(e);
+        }
 	});
 
     socket.on("message", function (msg) {
-        console.log('hey! new message from server: ' + msg);
-    })
+        console.error(msg);
+    });
+}
+
 }
