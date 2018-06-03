@@ -1,11 +1,10 @@
 var serverUrl = 'http://77.73.67.16:8154';
-// var mapElement = document.querySelectorAll(".map");
-// var windowElement = document.querySelectorAll(".minesweeper-game");
-// var score = document.querySelectorAll('.score-time-count');
-// var flagsLeft = document.querySelectorAll('.score-bomb-count');
+
 var mapSample = document.querySelector('#sample');
 var body = document.querySelector('#playground');
 var time = document.querySelector('.time');
+var loadPrevBtn = document.querySelector('[name=load-prev]');
+
 
 var ticks = 0;
 var cellSize = 30; // px
@@ -132,17 +131,24 @@ function Minesweeper (difficulty, name, callback) {
     socket.emit("play", {difficulty, name});
 
     var map = new Map('name');
+    var prevField = [];
+    var tmp = [];
+
+    loadPrevBtn.addEventListener('click', function() {
+        renderWindow(prevField, 0, --ticks, map);
+    })
 
 	socket.on("update", function ({field, flags_left}) {
         time.innerHTML = currentDate();
-
+        prevField = tmp;
+        tmp = field;
 		renderWindow(field, flags_left, ticks++, map);
 
         try {
             var {action, coordinates} = callback(field);
             if(action && coordinates)
                 setTimeout(() => {
-        			socket.emit(action, {coordinates});
+                    socket.emit(action, {coordinates});
         		}, 1000 / TPS);
             else
                 console.log('please provide correct action and coordinates');
@@ -152,6 +158,12 @@ function Minesweeper (difficulty, name, callback) {
         }
 	});
 
+    socket.on("end_game", function ({win}) {
+        if(win)
+            alert('you win! :)');
+
+        var prevField = tmp;
+    } )
     socket.on("message", function (msg) {
         console.error(msg);
     });
