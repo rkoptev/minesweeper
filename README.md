@@ -12,7 +12,7 @@ We did everything so that you could start easily, quickly and without a complica
 
 In the browser you can see the actual game process and watch the work of your program. Once you open the page - the code will start executing and you will see the actions of your program. We already implemented algorithm to randomly open cells(probably not the best tactics:))
 
-In the script you'll see the onUpdate() function that will be called every time before your turn. As an only argument to onUpdate(), you get the game field: 
+In the script you'll see the **onUpdate()** function that will be called every time before your turn. As an only argument to onUpdate(), you get the game field: 
 ```
 [[" ", " ", " ", " ", " ", " ", " ", " ", " "]
 [" ", " ", " ", " ", " ", " ", " ", " ", " "]

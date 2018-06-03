@@ -28,12 +28,12 @@ class WatcherNamespace(socketio.Namespace):
 
     @staticmethod
     def update(sid=None):
-        fields = {}
+        fields = []
         for sid in games:
-            fields[sid] = {
+            fields.append({
                 "name": names[sid] or "Anonymous",
                 "field": games[sid].get_field()
-            }
+            })
 
         sio.emit("state", namespace="/watch", sid=sid, data={
             "fields": fields
