@@ -73,7 +73,7 @@ class PlayerNamespace(socketio.Namespace):
             return
 
         coordinates = data["coordinates"]
-        
+
         if not self.__check_coordinates(sid, coordinates):
             return
 

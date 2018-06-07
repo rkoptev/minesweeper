@@ -1,45 +1,45 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-	<meta charset="UTF-8">
-	<title>Minesweeper</title>
-	<link rel="stylesheet" href="src/static/style.css">
-	<link rel="icon" href="src/static/favicon.png">
+    <meta charset="UTF-8">
+    <title>Minesweeper</title>
+    <link rel="stylesheet" href="http://77.73.67.16:8154static/style.css">
+    <link rel="icon" href="http://77.73.67.16:8154static/favicon.png">
 </head>
 <body>
 
-    <button type="button" name="load-prev" style="position:fixed">load previous field</button>
-    <button type="button" name="load-final" style="position:fixed; left: 150px;">load final field</button>
+<button type="button" name="load-prev" style="position:fixed">load previous field</button>
+<button type="button" name="load-final" style="position:fixed; left: 150px;">load final field</button>
 <div id="playground">
     <div class="minesweeper-game" id="sample">
-    	<div class="titlebar">
-    		Minesweeper
-    		<div class="titlebar-buttons closeme">&times;</div>
-    	</div>
-    	<div class="window">
-    		<div class="scoreboard">
-    			<div class="score-bomb-count panel">010</div>
-    			<button class="score-restart-button"></button>
-    			<div class="score-time-count panel">000</div>
-    		</div>
-    		<div class="map"></div>
-    	</div>
+        <div class="titlebar">
+            Minesweeper
+            <div class="titlebar-buttons closeme">&times;</div>
+        </div>
+        <div class="window">
+            <div class="scoreboard">
+                <div class="score-bomb-count panel">010</div>
+                <button class="score-restart-button"></button>
+                <div class="score-time-count panel">000</div>
+            </div>
+            <div class="map"></div>
+        </div>
     </div>
 </div>
 
 <div class="taskbar">
-	<div class="start"><img src="http://brightok.net/chickasaw/images/windows.gif"/>Start</div>
-	<div class="time"></div>
-	<div class="task active">Minesweeper</div>
+    <div class="start"><img src="http://brightok.net/chickasaw/images/windows.gif"/>Start</div>
+    <div class="time"></div>
+    <div class="task active">Minesweeper</div>
 
 </div>
 
 
-<script src="src/static/socket.io.dev.js"></script>
-<script src="src/static/sdk.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/socket.io/2.1.1/socket.io.slim.js"></script>
+<script src="http://77.73.67.16:8154/static/sdk.js"></script>
 <script src="your-code-here.js"></script>
 <script>
-	var game = Minesweeper(level, username, onUpdate);
+    var game = Minesweeper(level, username, onUpdate);
 </script>
 </body>
 </html>

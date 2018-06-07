@@ -2,9 +2,39 @@
 <html lang="en">
 <head>
     <meta charset="UTF-8">
-    <link rel="icon" type="image/png" href="/static/favicon.png"/>
-    <title>Dashboard - Minesweeper</title>
+    <title>Dashboard | Minesweeper</title>
+    <link rel="stylesheet" href="static/style.css">
+    <link rel="icon" href="static/favicon.png">
 </head>
 <body>
+<div id="playground">
+    <div class="minesweeper-game" id="sample">
+        <div class="titlebar">
+            Minesweeper
+            <div class="titlebar-buttons closeme">&times;</div>
+        </div>
+        <div class="window">
+            <div class="scoreboard">
+                <div class="score-bomb-count panel">010</div>
+                <button class="score-restart-button"></button>
+                <div class="score-time-count panel">000</div>
+            </div>
+            <div class="map"></div>
+        </div>
+    </div>
+</div>
+
+<div class="taskbar">
+    <div class="start"><img src="http://brightok.net/chickasaw/images/windows.gif"/>Start</div>
+    <div class="time"></div>
+    <div class="task active">Minesweeper</div>
+</div>
+
+
+<script src="https://cdnjs.cloudflare.com/ajax/libs/socket.io/2.1.1/socket.io.slim.js"></script>
+<script src="static/sdk.js"></script>
+<script>
+    var game = new Dashboard();
+</script>
 </body>
 </html>

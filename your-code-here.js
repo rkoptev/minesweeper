@@ -1,37 +1,33 @@
-/*
+// Welcome to the Minesweeper challenge!
 
-Welcome to the Minesweeper challenge!
-TODO: Add description
+// Uncomment following string if you are running on local server
+//serverUrl = 'http://localhost:8154';
 
- */
-
-// Name to be displayed on dashboard
+// Choose your name
 const username = "Anonymous";
 // Choose game difficulty: beginner, intermediate, expert
-const level = "beginner";
+const level = "expert";
 // How many moves per second you want to perform?
 // (Hint: less values are good for step-to-step debugging, bigger values - for final testing)
 // We recommend to start with 1 step per second
 const TPS = 1;
 
-// serverUrl = 'http://77.73.67.16:8154';
-
 
 function generateRandomCoordinatesAtField(field) {
-	var maxY = field.length;
-	var maxX = field[0].length;
+    var maxY = field.length;
+    var maxX = field[0].length;
 
-	return [
-		~~(Math.random() * maxX),
-		~~(Math.random() * maxY)
-	]
+    return [
+        ~~(Math.random() * maxX),
+        ~~(Math.random() * maxY)
+    ]
 }
 
 // This is where your magic happens
 function onUpdate(newField) {
-	var coordinates = generateRandomCoordinatesAtField(newField);
-
-	// At the end you must to do a move
+    // In every game update you need to do a move
     // Possible moves: open, mark (place flag), unmark
+
+	var coordinates = generateRandomCoordinatesAtField(newField);
 	return {action: "open", coordinates};
 }
