@@ -3,7 +3,7 @@ Minesweeper Online
 
 Minesweeper Online is a platform that allows you to write your own bot for Minesweeper on JavaScript or to organize a contest to compete in this fascinating experience together. Here is how it looks like:
 
-TODO: img
+![alt minesweeper](https://raw.githubusercontent.com/rkoptev/minesweeper/master/img/demo.png)
 
 All in the style of the good old game on Windows 2000, except you are not a player, your code is player!
 
