@@ -18,7 +18,7 @@ Call this method to remove flag from cell.
 #### socket.emit("open", { "coordinates": [x,y] })
 Call this method to open cell.
 
-#### socket.on("update", { "field": [...], "flags_left": 9 })
+#### socket.on("update", {"field": [...], "flags_left": 9 })
 This event fires every time when field update. It's needed for UI update and for updating game bot. Here is the example of field for beginner game:
 ```
 [[" ", " ", " ", " ", " ", " ", " ", " ", " "]

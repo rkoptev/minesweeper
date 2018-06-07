@@ -3,7 +3,8 @@ import eventlet.wsgi
 import socketio
 from flask import Flask, render_template
 
-from src.minesweeper import *
+from minesweeper import *
+# from src.minesweeper import *
 
 sio = socketio.Server()
 app = Flask(__name__)
@@ -22,6 +23,7 @@ def index():
 
 class WatcherNamespace(socketio.Namespace):
     """ Socket.io namespace for dashboard """
+
     def on_connect(self, sid, environ):
         log.info("Watcher %s connected" % sid)
         self.update(sid)
@@ -43,6 +45,7 @@ class WatcherNamespace(socketio.Namespace):
 
 class PlayerNamespace(socketio.Namespace):
     """ Socket.io namespace for players """
+
     def on_connect(self, sid, environ):
         log.info("Player connected, sid=%s" % sid)
         self.enter_room(sid, room=sid)
@@ -66,70 +69,70 @@ class PlayerNamespace(socketio.Namespace):
     def on_mark(self, sid, data):
         # Check if game started
         if sid not in games:
+            log.error("Move submitted before game started")
             return
 
-        if "coordinates" not in data:
-            self.emit("message", room=sid, data="You submitted wrong turn")
+        # Validate user input
+        if not self.__check_input(sid, data):
             return
 
-        coordinates = data["coordinates"]
+        x, y = data["coordinates"]
 
-        if not self.__check_coordinates(sid, coordinates):
-            return
-
-        if games[sid].mark_cell(coordinates):
-            log.info("Player %s marking cell with coordinates [%d,%d], sid=%s" % (names[sid], coordinates[0], coordinates[1], sid))
+        if games[sid].mark_cell((x, y)):
+            log.info("Player %s marking cell with coordinates [%d,%d], sid=%s" % (names[sid], x, y, sid))
         else:
-            self.emit("message", room=sid, data="Cell with coordinates [%d, %d] is already marked or opened" % (coordinates[0], coordinates[1]))
+            self.emit("message", room=sid, data="Cell with coordinates [%d, %d] is already marked or opened" % (x, y))
 
     def on_unmark(self, sid, data):
         # Check if game started
         if sid not in games:
+            log.error("Move submitted before game started")
             return
 
-        if "coordinates" not in data:
-            self.emit("message", room=sid, data="You submitted wrong turn")
+        # Validate user input
+        if not self.__check_input(sid, data):
             return
 
-        coordinates = data["coordinates"]
-        if not self.__check_coordinates(sid, coordinates):
-            return
+        x, y = data["coordinates"]
 
-        if games[sid].unmark_cell(coordinates):
-            log.info("Player %s unmarking cell with coordinates [%d,%d], sid=%s" % (names[sid], coordinates[0], coordinates[1], sid))
+        if games[sid].unmark_cell((x, y)):
+            log.info("Player %s unmarking cell with coordinates [%d,%d], sid=%s" % (names[sid], x, y, sid))
         else:
-            self.emit("message", room=sid, data="Cell with coordinates [%d, %d] is not marked or already opened" % (coordinates[0], coordinates[1]))
+            self.emit("message", room=sid, data="Cell with coordinates [%d, %d] is not marked or already opened" % (x, y))
 
     def on_open(self, sid, data):
         # Check if game started
         if sid not in games:
+            log.error("Move submitted before game started")
             return
 
-        if "coordinates" not in data:
-            self.emit("message", room=sid, data="You submitted wrong turn")
+        # Validate user input
+        if not self.__check_input(sid, data):
             return
 
-        coordinates = data["coordinates"]
-        if not self.__check_coordinates(sid, coordinates):
-            return
+        x, y = data["coordinates"]
 
-        if games[sid].open_cell(coordinates):
-            log.info("Player %s open cell with coordinates [%d,%d], sid=%s" % (names[sid], coordinates[0], coordinates[1], sid))
+        if games[sid].open_cell((x, y)):
+            log.info("Player %s open cell with coordinates [%d,%d], sid=%s" % (names[sid], x, y, sid))
         else:
-            self.emit("message", room=sid, data="Cell with coordinates [%d, %d] is already opened" % (coordinates[0], coordinates[1]))
+            self.emit("message", room=sid, data="Cell with coordinates [%d, %d] is already opened" % (x, y))
 
-    def __check_coordinates(self, sid, coordinates):
+    def __check_input(self, sid, data):
+        if "coordinates" not in data or len(data["coordinates"]) != 2:
+            self.emit("message", room=sid, data="You submitted wrong move format")
+            return False
+
         # Get coordinates of cell
-        x, y = coordinates
+        x, y = data["coordinates"]
 
-        # Check type
+        # Check type of coordinates
         if type(x) != int or type(y) != int:
             self.emit("message", room=sid, data="Coordinates must be integers from 0 to field_size - 1")
             return False
 
         # Check if coordinates are in range of field
         if not 0 <= x < games[sid].get_shape()[0] or not 0 <= y < games[sid].get_shape()[1]:
-            self.emit("message", room=sid, data="Coordinates [%d, %d] are out of field boundaries" % (coordinates[0], coordinates[1]))
+            self.emit("message", room=sid, data="Coordinates [%d, %d] are out of field boundaries" % (x, y))
             return False
 
         return True
@@ -155,6 +158,9 @@ class PlayerNamespace(socketio.Namespace):
 
         if sid in games:
             del games[sid]
+
+        # Update watchers UI
+        WatcherNamespace.update()
 
 
 if __name__ == '__main__':
