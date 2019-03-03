@@ -1,4 +1,4 @@
-var serverUrl = 'http://77.73.67.16:8154';
+var serverUrl = 'http://littlebox.ddns.net:8154';
 
 var mapSample = document.querySelector('#sample');
 var body = document.querySelector('#playground');
