@@ -1,10 +1,10 @@
+#!/usr/bin/env python3
 import logging as log
 import eventlet.wsgi
 import socketio
 from flask import Flask, render_template
 
 from minesweeper import *
-# from src.minesweeper import *
 
 sio = socketio.Server()
 app = Flask(__name__)
@@ -98,7 +98,8 @@ class PlayerNamespace(socketio.Namespace):
         if games[sid].unmark_cell((x, y)):
             log.info("Player %s unmarking cell with coordinates [%d,%d], sid=%s" % (names[sid], x, y, sid))
         else:
-            self.emit("message", room=sid, data="Cell with coordinates [%d, %d] is not marked or already opened" % (x, y))
+            self.emit("message", room=sid,
+                      data="Cell with coordinates [%d, %d] is not marked or already opened" % (x, y))
 
     def on_open(self, sid, data):
         # Check if game started
